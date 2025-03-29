@@ -14,6 +14,7 @@ import {
 import {
     Carousel, CarouselContent, CarouselItem, CarouselApi,
 } from '@/components/ui/carousel';
+import BottomBar from '@/components/ui/bottomBar';
 
 const developers = [{
     id: 1,
@@ -60,13 +61,6 @@ export default function BrowsePage() {
                         <Code2 className="h-8 w-8 text-[#6A4DFF]" />
                         <span className="ml-2 text-2xl font-bold gradient-text">Cognit.io</span>
                     </Link>
-                    <div className="flex items-center gap-4">
-                        <Button className="rounded-full" variant="ghost" size="icon">
-                            <Link href="/profile">
-                                <UserIcon className="h-7 w-7" />
-                            </Link>
-                        </Button>
-                    </div>
                 </nav>
             </header>
             <main className="max-w-md w-full mt-6 flex flex-col items-center">
@@ -107,7 +101,7 @@ export default function BrowsePage() {
                                             <Button
                                                 size="lg"
                                                 variant="outline"
-                                                className="rounded-full w-12 h-12 p-0"
+                                                className="rounded-full w-20 h-20 p-0"
                                                 onClick={handleDislike} // Добавляем обработчик
                                             >
                                                 <X className="h-6 w-6 text-gray-500" />
@@ -122,7 +116,7 @@ export default function BrowsePage() {
                                         >
                                             <Button
                                                 size="lg"
-                                                className="rounded-full w-12 h-12 p-0 bg-gradient-to-r from-brand-blue to-brand-purple hover:opacity-90"
+                                                className="rounded-full w-20 h-20 p-0 bg-gradient-to-r from-brand-blue to-brand-purple hover:opacity-90"
                                                 onClick={() => handleLike(dev.id)} // Обновляем обработчик
                                             >
                                                 <Heart className="h-6 w-6 text-white" />
@@ -137,6 +131,7 @@ export default function BrowsePage() {
             </main>
             <footer className="w-full py-6 text-center text-gray-600 text-sm mt-10">
                 Как это работает? Просто свайпай профили и находи интересных разработчиков!
+                <BottomBar />
             </footer>
         </div>
     );
