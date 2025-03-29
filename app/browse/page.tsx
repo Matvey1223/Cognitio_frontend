@@ -129,9 +129,9 @@ export default function BrowsePage() {
                     </CarouselContent>
                 </Carousel>
             </main>
-            <footer className="w-full py-6 text-center text-gray-600 text-sm mt-10">
-                Как это работает? Просто свайпай профили и находи интересных разработчиков!
-                <BottomBar />
+            <footer className="w-full py-6 text-center text-gray-400 text-xs mt-10">
+                Как это работает? <br/>Просто свайпай профили и находи интересных разработчиков!<br/>
+                <BottomBar/>
             </footer>
         </div>
     );
