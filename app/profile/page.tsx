@@ -12,6 +12,7 @@ import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
 import {Code2, Heart, MapPin, Pencil, X} from 'lucide-react';
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar';
 import {Badge} from "@/components/ui/badge";
+import Link from "next/link";
 
 interface Page {
     name: string;
@@ -106,7 +107,9 @@ export default function ProfilePage() {
             <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center">
                     <Code2 className="h-8 w-8 text-[#6A4DFF]"/>
-                    <span className="ml-2 text-2xl font-bold gradient-text">Cognit.io</span>
+                    <Link href="/browse">
+                        <span className="ml-2 text-2xl font-bold gradient-text">Cognit.io</span>
+                    </Link>
                 </div>
             </div>
 
@@ -122,25 +125,27 @@ export default function ProfilePage() {
                             <div className="flex items-center space-x-4">
                                 <Avatar className="h-24 w-24">
                                     <AvatarImage src={profile.avatar} alt={profile.name}/>
-                                    <AvatarFallback>{profile.name[0]}</AvatarFallback>
                                 </Avatar>
                                 <div>
                                     <h1 className="text-2xl font-bold">{profile.name}</h1>
                                     <div className="flex items-center text-gray-600 mt-1">
-                                        <MapPin className="h-4 w-4 mr-1"/>
-                                        Текущая локация: Казань
+                                        <MapPin className="h-4 w-4 mr-2 hidden sm:inline"/>
+                                        Текущий город: Казань
                                     </div>
                                     <div className="flex items-center text-gray-600 mt-1">
-                                        <MapPin className="h-4 w-4 mr-1"/>
+                                        <MapPin className="h-4 w-4 mr-2 hidden sm:inline"/>
                                         Родной город: {profile.hometown}
                                     </div>
                                 </div>
                             </div>
                             <Dialog>
                                 <DialogTrigger asChild>
-                                    <Button variant="outline" className="flex items-center">
-                                        <Pencil className="h-4 w-4 mr-2"/>
-                                        Редактировать
+                                    <Button
+                                        variant="outline"
+                                        className="flex items-center gap-2 px-3 py-2 text-sm sm:text-base sm:px-4 sm:py-2 md:text-lg md:px-5 md:py-3 ml-2"
+                                    >
+                                        <Pencil className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
+                                        <span className="hidden sm:inline">Редактировать</span>
                                     </Button>
                                 </DialogTrigger>
                                 <DialogContent className="sm:max-w-[425px]" style={{backgroundColor: '#6A4DFF'}}>

@@ -1,21 +1,20 @@
 'use client';
 
-import {useState} from 'react';
+import { useState, useCallback } from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import {
     Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,
 } from '@/components/ui/card';
-import {Button} from '@/components/ui/button';
-import {Badge} from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
-    Heart, X, Code2, ExternalLink, MessageCircle, ChevronLeft, ChevronRight, UserIcon,
+    Heart, X, Code2, UserIcon
 } from 'lucide-react';
 import {
-    Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious,
+    Carousel, CarouselContent, CarouselItem, CarouselApi,
 } from '@/components/ui/carousel';
 
-
-// Mock data for demonstration
 const developers = [{
     id: 1,
     name: 'Мария Гончаренко',
@@ -32,107 +31,113 @@ const developers = [{
     github: 'github.com/alexandr-dev',
     description: 'Специализируюсь на создании красивых и отзывчивых пользовательских интерфейсов с использованием современных веб-технологий.',
     techStack: ['React', 'Vue.js', 'TailwindCSS', 'JavaScript'],
-}, {
-    id: 3,
-    name: 'Эмилия Богданова',
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop',
-    position: 'Backend разработчик',
-    github: 'github.com/alexandr-dev',
-    description: 'Сосредоточена на создании надежных и безопасных серверных систем и стремлюсь к чистоте кода.',
-    techStack: ['Python', 'Django', 'Docker', 'MongoDB'],
-},];
+}];
 
 export default function BrowsePage() {
-    const [currentIndex, setCurrentIndex] = useState(0);
     const [likedProfiles, setLikedProfiles] = useState<number[]>([]);
+    const [api, setApi] = useState<CarouselApi>(); // Состояние для API карусели
 
-    const handleLike = (id: number) => {
-        setLikedProfiles([...likedProfiles, id]);
-        // In a real app, this would make an API call
-    };
+    // Обработчик для кнопки "лайк"
+    const handleLike = useCallback((id: number) => {
+        setLikedProfiles((prev) => [...prev, id]); // Добавляем профиль в список лайкнутых
+        if (api) {
+            api.scrollNext(); // Переключаем на следующую карточку
+        }
+    }, [api]);
 
-    return (<div className="min-h-screen bg-gray-50">
-        <header className="border-b bg-white">
-            <nav className="rounded max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-                <Link href="/" className="flex items-center">
-                    <Code2 className="h-8 w-8 text-[#6A4DFF]"/>
-                    <span className="ml-2 text-2xl font-bold gradient-text">Cognit.io</span>
-                </Link>
-                <div className=" flex items-center gap-4">
-                    {/*<Button className="rounded-full" variant="ghost" size="icon">*/}
-                    {/*    <MessageCircle className="h-5 w-5"/>*/}
-                    {/*</Button>*/}
-                    <Button className="rounded-full" variant="ghost" size="icon">
-                        <Link href="/profile">
-                            <UserIcon className="h-7 w-7" />
-                        </Link>
-                    </Button>
-                </div>
-            </nav>
-        </header>
-        <main className="max-w-2xl mx-auto my-8 flex items-center justify-center px-4 py-2 rounded shadow-xl border border-gray-300 bg-white">
-            <Carousel className="rounded w-full">
-                <CarouselContent>
-                    {developers.map((dev) => (<CarouselItem key={dev.id}>
-                        <Card className="w-full border-0">
-                            <CardContent className="p-6">
-                                <div className="flex flex-col md:flex-row md:items-center md:gap-6">
-                                    <img
-                                        src={dev.image}
-                                        alt={dev.name}
-                                        className="w-[150px] h-[150px] object-cover rounded-full mb-4 md:mb-0 mx-auto md:mx-0"
-                                    />
-                                    <div className="w-full flex flex-col justify-start">
-                                        <div>
-                                            <CardTitle className="text-2xl">{dev.name}</CardTitle>
-                                            <CardDescription className="text-lg text-gray-600">
-                                                {dev.position}
-                                            </CardDescription>
-                                        </div>
-                                        <div className="flex flex-wrap gap-2 mt-4">
+    // Обработчик для кнопки "дизлайк"
+    const handleDislike = useCallback(() => {
+        if (api) {
+            api.scrollNext(); // Переключаем на следующую карточку
+        }
+    }, [api]);
+
+    return (
+        <div className="min-h-screen bg-gray-50 flex flex-col items-center">
+            <header className="border-b bg-white w-full">
+                <nav className="rounded max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                    <Link href="/browse" className="flex items-center">
+                        <Code2 className="h-8 w-8 text-[#6A4DFF]" />
+                        <span className="ml-2 text-2xl font-bold gradient-text">Cognit.io</span>
+                    </Link>
+                    <div className="flex items-center gap-4">
+                        <Button className="rounded-full" variant="ghost" size="icon">
+                            <Link href="/profile">
+                                <UserIcon className="h-7 w-7" />
+                            </Link>
+                        </Button>
+                    </div>
+                </nav>
+            </header>
+            <main className="max-w-md w-full mt-6 flex flex-col items-center">
+                <h1 className="text-2xl font-bold mb-2">Найди разработчика</h1>
+                <p className="text-gray-600 text-center mb-4">Выбери подходящего сокомандника по стэку технологий</p>
+                <Carousel className="rounded w-full" setApi={setApi}>
+                    <CarouselContent>
+                        {developers.map((dev) => (
+                            <CarouselItem key={dev.id}>
+                                <Card className="w-full border-0">
+                                    <CardContent className="p-4 flex flex-col items-center text-center">
+                                        <img
+                                            src={dev.image}
+                                            alt={dev.name}
+                                            className="w-32 h-32 object-cover rounded-full mb-4"
+                                        />
+                                        <CardTitle className="text-lg">{dev.name}</CardTitle>
+                                        <CardDescription className="text-gray-600">{dev.position}</CardDescription>
+                                        <div className="flex flex-wrap gap-2 mt-2 justify-center">
                                             {dev.techStack.map((tech) => (
-                                                <Badge
-                                                    key={tech}
-                                                    variant="secondary"
-                                                    className="bg-brand-lavender/10 text-brand-indigo"
-                                                >
+                                                <Badge key={tech} variant="secondary" className="bg-brand-lavender/10 text-brand-indigo">
                                                     {tech}
                                                 </Badge>
                                             ))}
                                         </div>
-                                        <div className="mt-4">
-                                            <a href={`https://${dev.github}`} target="_blank" rel="noopener noreferrer"
-                                               className="text-[#6A4DFF] hover:underline">
-                                                {dev.github}
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                                    <p className="text-gray-600 md:col-span-2">{dev.description}</p>
-                                </div>
-                            </CardContent>
-                            <CardFooter className="flex justify-center gap-4 p-6 pt-0">
-                                <Button
-                                    size="lg"
-                                    variant="outline"
-                                    className="rounded-full w-12 h-12 p-0"
-                                    onClick={() => setCurrentIndex(currentIndex + 1)}
-                                >
-                                    <X className="h-6 w-6 text-gray-500"/>
-                                </Button>
-                                <Button
-                                    size="lg"
-                                    className="rounded-full w-12 h-12 p-0 bg-gradient-to-r from-brand-blue to-brand-purple hover:opacity-90"
-                                    onClick={() => handleLike(dev.id)}
-                                >
-                                    <Heart className="h-6 w-6 text-white"/>
-                                </Button>
-                            </CardFooter>
-                        </Card>
-                    </CarouselItem>))}
-                </CarouselContent>
-            </Carousel>
-        </main>
-    </div>);
+                                        <a href={`https://${dev.github}`} target="_blank" rel="noopener noreferrer" className="mt-2 text-[#6A4DFF] hover:underline">
+                                            {dev.github}
+                                        </a>
+                                        <p className="text-gray-600 mt-2">{dev.description}</p>
+                                    </CardContent>
+                                    <CardFooter className="flex justify-between gap-4 p-4">
+                                        {/* Дизлайк */}
+                                        <motion.div
+                                            initial={{ scale: 1 }}
+                                            whileHover={{ scale: 1.2 }}
+                                            whileTap={{ scale: 0.9 }}
+                                        >
+                                            <Button
+                                                size="lg"
+                                                variant="outline"
+                                                className="rounded-full w-12 h-12 p-0"
+                                                onClick={handleDislike} // Добавляем обработчик
+                                            >
+                                                <X className="h-6 w-6 text-gray-500" />
+                                            </Button>
+                                        </motion.div>
+
+                                        {/* Лайк */}
+                                        <motion.div
+                                            initial={{ scale: 1 }}
+                                            whileHover={{ scale: 1.2 }}
+                                            whileTap={{ scale: 0.9 }}
+                                        >
+                                            <Button
+                                                size="lg"
+                                                className="rounded-full w-12 h-12 p-0 bg-gradient-to-r from-brand-blue to-brand-purple hover:opacity-90"
+                                                onClick={() => handleLike(dev.id)} // Обновляем обработчик
+                                            >
+                                                <Heart className="h-6 w-6 text-white" />
+                                            </Button>
+                                        </motion.div>
+                                    </CardFooter>
+                                </Card>
+                            </CarouselItem>
+                        ))}
+                    </CarouselContent>
+                </Carousel>
+            </main>
+            <footer className="w-full py-6 text-center text-gray-600 text-sm mt-10">
+                Как это работает? Просто свайпай профили и находи интересных разработчиков!
+            </footer>
+        </div>
+    );
 }
