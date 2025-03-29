@@ -15,6 +15,7 @@ export default function SignupPage() {
     hometown: '',
     stack: [''], // Массив с одним пустым полем по умолчанию
     gh: '',
+    position: '',
     bio: '',
   });
 
@@ -50,9 +51,8 @@ export default function SignupPage() {
             <span className="ml-2 text-2xl font-bold gradient-text">Cognit.io</span>
           </Link>
         </div>
-
         <Card className="w-full max-w-md p-8">
-          <h1 className="text-2xl font-bold text-center mb-6 text-black">Преждем чем начать, дополни немного информации о себе</h1>
+          <h1 className="text-2xl font-bold text-center mb-6 text-black">Прежде чем начать, дополни немного информации о себе</h1>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="hometown">Родной город</Label>
@@ -65,7 +65,17 @@ export default function SignupPage() {
                   required
               />
             </div>
-
+            <div className="space-y-2">
+              <Label htmlFor="position">Позиция</Label>
+              <Input
+                  id="position"
+                  type="text"
+                  placeholder="Fullstack"
+                  value={formData.position}
+                  onChange={(e) => setFormData({ ...formData, position: e.target.value })}
+                  required
+              />
+            </div>
             <div className="space-y-2">
               <Label>Стек технологий</Label>
               {formData.stack.map((stackItem, index) => (
@@ -87,7 +97,6 @@ export default function SignupPage() {
                   </div>
               ))}
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="gh">Ссылка на GitHub</Label>
               <Input
@@ -99,8 +108,7 @@ export default function SignupPage() {
                   required
               />
             </div>
-
-            <div className="space-y-2 ">
+            <div className="space-y-2">
               <Label htmlFor="bio">О себе</Label>
               <Textarea
                   id="bio"
@@ -113,7 +121,7 @@ export default function SignupPage() {
             </div>
 
             <Link href="/browse">
-              <Button type="submit" className="rounded-full w-full btn-gradient">
+              <Button type="submit" className="rounded-full w-full btn-gradient mt-4">
                 Начать поиск!
               </Button>
             </Link>

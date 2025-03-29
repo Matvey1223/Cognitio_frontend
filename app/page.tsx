@@ -12,9 +12,9 @@ export default function Home() {
                     </div>
                     <Button variant="ghost" size="icon">
                         <Link href="/profile">
-                            <UserIcon className="h-7 w-7" />
+                            <UserIcon className="h-7 w-7"/>
                         </Link>
-                        </Button>
+                    </Button>
                     {/*<div className="flex items-center gap-4">*/}
                     {/*    <Link href="/login">*/}
                     {/*        <Button className="rounded-full" variant="outline">Вход</Button>*/}
