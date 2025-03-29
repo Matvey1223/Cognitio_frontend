@@ -5,7 +5,7 @@ import Image from 'next/image';
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
-import {Card} from '@/components/ui/card';
+import {Card, CardDescription, CardTitle} from '@/components/ui/card';
 import {Textarea} from '@/components/ui/textarea';
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger} from '@/components/ui/dialog';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
@@ -30,6 +30,7 @@ interface Like {
     position: string;
     stack: string[];
     bio: string;
+    github: string;
     avatar: string;
 }
 
@@ -52,6 +53,7 @@ export default function ProfilePage() {
         position: 'Fullstack',
         bio: 'Увлечена созданием масштабируемых веб-приложений и наставничеством молодых разработчиков.',
         stack: ['Vue.js', 'Python', 'Django'],
+        github: 'github.com/alexandr-dev',
         avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&q=80',
     }, {
         id: 2,
@@ -60,6 +62,7 @@ export default function ProfilePage() {
         position: 'Frontend',
         bio: 'Специализируется на создании красивых и отзывчивых пользовательских интерфейсов с использованием современных веб-технологий.',
         stack: ['Angular', 'Java', 'Spring Boot'],
+        github: 'github.com/alexandr-dev',
         avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&q=80',
     },]);
 
@@ -233,30 +236,38 @@ export default function ProfilePage() {
                 <TabsContent value="likes">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {likes.map((like) => (<Card key={like.id} className="profile-card p-6">
-                            <Avatar className="h-16 w-16 object-cover rounded-full mb-4">
-                                <img
-                                    src={like.avatar}
-                                    alt={like.name}
-                                    className="object-cover rounded-full mb-4 md:mb-0 mx-auto md:mx-0"
-                                />
-                                <AvatarFallback>{like.name[0]}</AvatarFallback>
-                            </Avatar>
-                            <div className="flex justify-between items-start">
-                                <div className="flex items-center space-x-4">
+                            <img
+                                src={like.avatar}
+                                alt={like.name}
+                                className="w-[150px] h-[150px] object-cover rounded-full mb-4 md:mb-0 mx-auto md:mx-0"
+                            />
+                            <div className="flex flex-col md:flex-row md:items-center md:gap-6">
+                                <div className="w-full flex flex-col justify-start">
                                     <div>
-                                        <h3 className="text-lg font-semibold">{like.name}</h3>
-                                        <p className="text-lg">{like.position} Разработчик</p>
-                                        <div className="flex flex-wrap gap-2 mt-3">
-                                            <div className="flex flex-wrap gap-2">
-                                                {like.stack.map((tech, index) => (<Badge
-                                                    key={tech}
-                                                    variant="secondary"
-                                                    className="bg-brand-lavender/10 text-brand-indigo">
-                                                    {tech}
-                                                </Badge>))}
-                                            </div>
-                                        </div>
-                                        <p className="text-gray-600 mt-3">{profile.bio}</p>
+                                        <CardTitle className="text-2xl mt-3">{like.name}</CardTitle>
+                                        <CardDescription className="text-lg text-gray-600">
+                                            {like.position}
+                                        </CardDescription>
+                                    </div>
+                                    <div className="flex flex-wrap gap-2 mt-4">
+                                        {like.stack.map((tech) => (
+                                            <Badge
+                                                key={tech}
+                                                variant="secondary"
+                                                className="bg-brand-lavender/10 text-brand-indigo"
+                                            >
+                                                {tech}
+                                            </Badge>
+                                        ))}
+                                    </div>
+                                    <div className="mt-4">
+                                        <a href={`https://${like.github}`} target="_blank" rel="noopener noreferrer"
+                                           className="text-[#6A4DFF] hover:underline">
+                                            {like.github}
+                                        </a>
+                                    </div>
+                                    <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                        <p className="text-gray-600 md:col-span-2">{like.bio}</p>
                                     </div>
                                 </div>
                             </div>
