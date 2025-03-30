@@ -7,8 +7,8 @@ import { Toaster } from '@/components/ui/toaster';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'DevMatch - Find Your Perfect Coding Partner',
-  description: 'Connect with developers who share your tech stack and build amazing projects together',
+  title: 'Cognit.io - Найди своего лучшего партнера для кодинга!',
+  description: 'Объединяйся с другими разработчиками и создавайте проекты вместе"',
 };
 
 export default function RootLayout({

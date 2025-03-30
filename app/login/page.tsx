@@ -7,16 +7,23 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { Code2 } from 'lucide-react';
+import { auth } from '@/services/auth.service'
+import { createAccessToken, getAccessToken } from "@/services/cookies.service";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
     email: '',
-    password: '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Authentication logic will be implemented later
+
+      try {
+          const response = await auth(formData.email);
+          await createAccessToken(response.access_token)
+      } catch (error) {
+          console.error(error);
+      }
   };
 
   return (
@@ -44,29 +51,10 @@ export default function LoginPage() {
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              required
-            />
-          </div>
-
           <Button type="submit" className="w-full btn-gradient">
             Log in
           </Button>
         </form>
-
-        <p className="text-center mt-4 text-sm text-gray-600">
-          Don't have an account?{' '}
-          <Link href="/signup" className="text-[#6A4DFF] hover:underline">
-            Sign up
-          </Link>
-        </p>
       </Card>
     </div>
   );

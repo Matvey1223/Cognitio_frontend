@@ -116,7 +116,7 @@ export default function SignupPage() {
                   value={formData.bio}
                   onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
                   required
-                  className="h-32"
+                  className="bg-white h-32"
               />
             </div>
 
