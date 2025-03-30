@@ -12,6 +12,8 @@ import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
 import {Code2, Heart, MapPin, Pencil, X} from 'lucide-react';
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar';
 import {Badge} from "@/components/ui/badge";
+import Link from "next/link";
+import BottomBar from "@/components/ui/bottomBar";
 
 interface Page {
     name: string;
@@ -106,189 +108,131 @@ export default function ProfilePage() {
             <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center">
                     <Code2 className="h-8 w-8 text-[#6A4DFF]"/>
-                    <span className="ml-2 text-2xl font-bold gradient-text">Cognit.io</span>
+                    <Link href="/browse">
+                        <span className="ml-2 text-2xl font-bold gradient-text">Cognit.io</span>
+                    </Link>
                 </div>
             </div>
 
-            <Tabs defaultValue="profile" className="space-y-6">
-                <TabsList className="grid w-full grid-cols-2 mb-8">
-                    <TabsTrigger value="profile">Мой профиль</TabsTrigger>
-                    <TabsTrigger value="likes">Лайки ({likes.length})</TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="profile">
-                    <Card className="profile-card p-8">
-                        <div className="flex justify-between items-start mb-6">
-                            <div className="flex items-center space-x-4">
-                                <Avatar className="h-24 w-24">
-                                    <AvatarImage src={profile.avatar} alt={profile.name}/>
-                                    <AvatarFallback>{profile.name[0]}</AvatarFallback>
-                                </Avatar>
-                                <div>
-                                    <h1 className="text-2xl font-bold">{profile.name}</h1>
-                                    <div className="flex items-center text-gray-600 mt-1">
-                                        <MapPin className="h-4 w-4 mr-1"/>
-                                        Текущая локация: Казань
-                                    </div>
-                                    <div className="flex items-center text-gray-600 mt-1">
-                                        <MapPin className="h-4 w-4 mr-1"/>
-                                        Родной город: {profile.hometown}
-                                    </div>
-                                </div>
-                            </div>
-                            <Dialog>
-                                <DialogTrigger asChild>
-                                    <Button variant="outline" className="flex items-center">
-                                        <Pencil className="h-4 w-4 mr-2"/>
-                                        Редактировать
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent className="sm:max-w-[425px]" style={{backgroundColor: '#6A4DFF'}}>
-                                    <DialogHeader>
-                                        <DialogTitle style={{color: '#ffffff'}}>Редактировать профиль</DialogTitle>
-                                    </DialogHeader>
-                                    <div className="space-y-4 py-4">
-                                        <div className="space-y-2">
-                                            <Label style={{color: '#ffffff'}}>Родной город</Label>
-                                            <Input
-                                                value={profile.hometown}
-                                                onChange={(e) => handleProfileUpdate({hometown: e.target.value})}
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label style={{color: '#ffffff'}}>Позиция</Label>
-                                            <Input
-                                                value={profile.position}
-                                                onChange={(e) => handleProfileUpdate({position: e.target.value})}
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label style={{color: '#ffffff'}}>Стек технологий</Label>
-                                            {profile.stack.map((stackItem, index) => (
-                                                <div key={index} className="flex items-center space-x-2">
-                                                    <Input
-                                                        id={`stack-${index}`}
-                                                        type="text"
-                                                        placeholder="React, NextJS, Python, ..."
-                                                        value={stackItem}
-                                                        onChange={(e) => handleStackChange(index, e.target.value)}
-                                                        required
-                                                    />
-                                                    {/* Кнопка "+" добавляется только для последнего поля */}
-                                                    {index === profile.stack.length - 1 && (
-                                                        <Button type="button" onClick={addStackField}
-                                                                className="ml-2 text-white">
-                                                            +
-                                                        </Button>)}
-                                                </div>))}
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label style={{color: '#ffffff'}}>GitHub</Label>
-                                            <Input
-                                                value={profile.github}
-                                                onChange={(e) => handleProfileUpdate({github: e.target.value})}
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label style={{color: '#ffffff'}}>О себе</Label>
-                                            <Textarea
-                                                value={profile.bio}
-                                                onChange={(e) => handleProfileUpdate({bio: e.target.value})}
-                                            />
-                                        </div>
-                                    </div>
-                                </DialogContent>
-                            </Dialog>
+            <Card className="profile-card p-8 mb-8">
+            <div className="flex justify-between items-start mb-6">
+                <div className="flex items-center space-x-4">
+                    <Avatar className="h-24 w-24">
+                        <AvatarImage src={profile.avatar} alt={profile.name} />
+                    </Avatar>
+                    <div>
+                        <h1 className="text-2xl font-bold">{profile.name}</h1>
+                        <div className="flex items-center text-gray-600 mt-1">
+                            <MapPin className="h-4 w-4 mr-2 hidden sm:inline" />
+                            Текущий город: Казань
                         </div>
-                        <div className="space-y-6">
-                            <div>
-                                <h2 className="text-lg font-semibold mb-3">Позиция</h2>
-                                <p className="text-gray-600">{profile.position} Разработчик</p>
-                            </div>
-                            <div>
-                                <h2 className="text-lg font-semibold mb-3">Стек технологий</h2>
-                                <div className="flex flex-wrap gap-2">
-                                    {profile.stack.map((tech, index) => (<Badge
-                                        key={tech}
-                                        variant="secondary"
-                                        className="bg-brand-lavender/10 text-brand-indigo"
-                                    >
-                                        {tech}
-                                    </Badge>))}
-                                </div>
-                            </div>
-                            <div>
-                                <h2 className="text-lg font-semibold mb-3">О себе</h2>
-                                <p className="text-gray-600">{profile.bio}</p>
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <h2 className="text-lg font-semibold mb-2">GitHub</h2>
-                                    <a href={`https://${profile.github}`} target="_blank" rel="noopener noreferrer"
-                                       className="text-[#6A4DFF] hover:underline">
-                                        {profile.github}
-                                    </a>
-                                </div>
-                            </div>
+                        <div className="flex items-center text-gray-600 mt-1">
+                            <MapPin className="h-4 w-4 mr-2 hidden sm:inline" />
+                            Родной город: {profile.hometown}
                         </div>
-                    </Card>
-                </TabsContent>
-                <TabsContent value="likes">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {likes.map((like) => (<Card key={like.id} className="profile-card p-6">
-                            <img
-                                src={like.avatar}
-                                alt={like.name}
-                                className="w-[150px] h-[150px] object-cover rounded-full mb-4 md:mb-0 mx-auto md:mx-0"
-                            />
-                            <div className="flex flex-col md:flex-row md:items-center md:gap-6">
-                                <div className="w-full flex flex-col justify-start">
-                                    <div>
-                                        <CardTitle className="text-2xl mt-3">{like.name}</CardTitle>
-                                        <CardDescription className="text-lg text-gray-600">
-                                            {like.position}
-                                        </CardDescription>
-                                    </div>
-                                    <div className="flex flex-wrap gap-2 mt-4">
-                                        {like.stack.map((tech) => (
-                                            <Badge
-                                                key={tech}
-                                                variant="secondary"
-                                                className="bg-brand-lavender/10 text-brand-indigo"
-                                            >
-                                                {tech}
-                                            </Badge>
-                                        ))}
-                                    </div>
-                                    <div className="mt-4">
-                                        <a href={`https://${like.github}`} target="_blank" rel="noopener noreferrer"
-                                           className="text-[#6A4DFF] hover:underline">
-                                            {like.github}
-                                        </a>
-                                    </div>
-                                    <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                                        <p className="text-gray-600 md:col-span-2">{like.bio}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="flex space-x-2 mt-3">
-                                <Button size="icon" variant="outline"
-                                        className="text-red-500 hover:bg-red-50">
-                                    <Heart className="h-4 w-4"/>
-                                </Button>
-                                <Button
-                                    size="icon"
-                                    variant="outline"
-                                    className="text-gray-500 hover:bg-gray-50"
-                                    onClick={() => removeLike(like.id)}
-                                >
-                                    <X className="h-4 w-4"/>
-                                </Button>
-                            </div>
-                        </Card>))}
                     </div>
-                </TabsContent>
-            </Tabs>
+                </div>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button
+                            variant="outline"
+                            className="flex items-center gap-2 px-3 py-2 text-sm sm:text-base sm:px-4 sm:py-2 md:text-lg md:px-5 md:py-3 ml-2"
+                        >
+                            <Pencil className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
+                            <span className="hidden sm:inline">Редактировать</span>
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]" style={{ backgroundColor: '#6A4DFF' }}>
+                        <DialogHeader>
+                            <DialogTitle style={{ color: '#ffffff' }}>Редактировать профиль</DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                            <div className="space-y-2">
+                                <Label style={{ color: '#ffffff' }}>Родной город</Label>
+                                <Input
+                                    value={profile.hometown}
+                                    onChange={(e) => handleProfileUpdate({ hometown: e.target.value })}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label style={{ color: '#ffffff' }}>Позиция</Label>
+                                <Input
+                                    value={profile.position}
+                                    onChange={(e) => handleProfileUpdate({ position: e.target.value })}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label style={{ color: '#ffffff' }}>Стек технологий</Label>
+                                {profile.stack.map((stackItem, index) => (
+                                    <div key={index} className="flex items-center space-x-2">
+                                        <Input
+                                            id={`stack-${index}`}
+                                            type="text"
+                                            placeholder="React, NextJS, Python, ..."
+                                            value={stackItem}
+                                            onChange={(e) => handleStackChange(index, e.target.value)}
+                                            required
+                                        />
+                                        {index === profile.stack.length - 1 && (
+                                            <Button type="button" onClick={addStackField} className="ml-2 text-white">
+                                                +
+                                            </Button>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="space-y-2">
+                                <Label style={{ color: '#ffffff' }}>GitHub</Label>
+                                <Input
+                                    value={profile.github}
+                                    onChange={(e) => handleProfileUpdate({ github: e.target.value })}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label style={{ color: '#ffffff' }}>О себе</Label>
+                                <Textarea
+                                    value={profile.bio}
+                                    onChange={(e) => handleProfileUpdate({ bio: e.target.value })}
+                                />
+                            </div>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+            </div>
+            <div className="space-y-6">
+                <div>
+                    <h2 className="text-lg font-semibold mb-3">Позиция</h2>
+                    <p className="text-gray-600">{profile.position} Разработчик</p>
+                </div>
+                <div>
+                    <h2 className="text-lg font-semibold mb-3">Стек технологий</h2>
+                    <div className="flex flex-wrap gap-2">
+                        {profile.stack.map((tech, index) => (
+                            <Badge
+                                key={tech}
+                                variant="secondary"
+                                className="bg-brand-lavender/10 text-brand-indigo"
+                            >
+                                {tech}
+                            </Badge>
+                        ))}
+                    </div>
+                </div>
+                <div>
+                    <h2 className="text-lg font-semibold mb-3">О себе</h2>
+                    <p className="text-gray-600">{profile.bio}</p>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <h2 className="text-lg font-semibold mb-2">GitHub</h2>
+                        <a href={`https://${profile.github}`} target="_blank" rel="noopener noreferrer" className="text-[#6A4DFF] hover:underline">
+                            {profile.github}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </Card>
+            <BottomBar />
         </div>
     </div>);
 }
