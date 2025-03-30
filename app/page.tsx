@@ -10,18 +10,6 @@ export default function Home() {
                     <Code2 className="h-8 w-8 text-[#6A4DFF]"/>
                     <span className="ml-2 text-2xl font-bold gradient-text">Cognit.io</span>
                 </div>
-                {/*<div className="flex items-center gap-4">*/}
-                {/*    <Button className="rounded-full" variant="ghost" size="icon">*/}
-                {/*        <Link href="/chats">*/}
-                {/*            <MessageCircle className="h-5 w-5"/>*/}
-                {/*        </Link>*/}
-                {/*    </Button>*/}
-                {/*    <Button className="rounded-full" variant="ghost" size="icon">*/}
-                {/*        <Link href="/profile">*/}
-                {/*            <UserIcon className="h-7 w-7"/>*/}
-                {/*        </Link>*/}
-                {/*    </Button>*/}
-                {/*</div>*/}
             </nav>
         </header>
 
