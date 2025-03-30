@@ -6,6 +6,7 @@ const BASE_URL: string = "http://localhost:8000/api/v1/students/"
 
 interface AccessToken{
     access_token: string
+    is_first_time: boolean
 }
 
 

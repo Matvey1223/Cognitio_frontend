@@ -16,8 +16,7 @@ import Link from "next/link";
 import BottomBar from "@/components/ui/bottomBar";
 import {getMe, getReceivedLikes, UserData, LikesData} from "@/services/student.service";
 import { likeAction, LikeData, unlikeAction } from "@/services/actions.service";
-import {axiosWithAuth} from "@/intreceptors";
-
+import { createChat } from "@/services/chat.service";
 
 export default function ProfilePage() {
 
@@ -38,6 +37,7 @@ export default function ProfilePage() {
 
     const submitLike = async (receiver_id: number) => {
         const response = await likeAction(receiver_id)
+        await createChat(receiver_id, likes[0].receiver_id)
     }
 
     const removeLike = async (id: number) => {

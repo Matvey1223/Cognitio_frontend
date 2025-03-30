@@ -8,6 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { Code2 } from 'lucide-react';
 import {Textarea} from "@/components/ui/textarea";
+import {updateProfile} from "@/services/student.service";
+import {toast} from "sonner";
 
 export default function SignupPage() {
   // Изменяем начальное состояние: stack теперь массив
@@ -21,7 +23,9 @@ export default function SignupPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Логика аутентификации будет реализована позже
+    const response = await updateProfile(formData.hometown, formData.position, formData.stack, formData.gh,
+        formData.bio);
+    toast.success('Данные успешно обновлены')
   };
 
   // Функция для добавления нового поля

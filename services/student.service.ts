@@ -31,10 +31,10 @@ export async function getMe(): Promise<UserData> {
     return response.data
 }
 
-export async function updateProfile(position: string | undefined, technologies: string[] | undefined, github: string | undefined,
+export async function updateProfile(city: string | undefined, position: string | undefined, technologies: string[] | undefined, github: string | undefined,
                                     description: string | undefined): Promise<UserData> {
     const response = await axiosWithAuth.patch(BASE_URL + 'update_profile',
-        {position: position, github: github, technologies: technologies, description: description})
+        {city: city, position: position, github: github, technologies: technologies, description: description})
     return response.data
 }
 

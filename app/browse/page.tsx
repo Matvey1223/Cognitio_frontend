@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import {useState, useCallback, useEffect} from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
@@ -15,31 +15,40 @@ import {
     Carousel, CarouselContent, CarouselItem, CarouselApi,
 } from '@/components/ui/carousel';
 import BottomBar from '@/components/ui/bottomBar';
+import {likeAction} from "@/services/actions.service";
+import {createChat} from "@/services/chat.service";
+import {axiosWithAuth} from "@/intreceptors";
 
-const developers = [{
-    id: 1,
-    name: 'Мария Гончаренко',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000&auto=format&fit=crop',
-    position: 'Fullstack Разработчик',
-    github: 'github.com/alexandr-dev',
-    description: 'Увлекаюсь созданием масштабируемых веб-приложений и наставничеством молодых разработчиков.',
-    techStack: ['React', 'Node.js', 'TypeScript', 'PostgreSQL', 'AWS'],
-}, {
-    id: 2,
-    name: 'Алексей Родригез',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop',
-    position: 'Frontend разработчик',
-    github: 'github.com/alexandr-dev',
-    description: 'Специализируюсь на создании красивых и отзывчивых пользовательских интерфейсов с использованием современных веб-технологий.',
-    techStack: ['React', 'Vue.js', 'TailwindCSS', 'JavaScript'],
-}];
+
+export interface UserData {
+    student_id: number
+    age: number
+    city_id: number
+    position: string | undefined
+    email: string
+    photo: string | undefined
+    full_name: string
+    description: string | undefined
+    github: string | undefined
+    technologies: any[]
+    is_first_time: boolean
+}
 
 export default function BrowsePage() {
     const [likedProfiles, setLikedProfiles] = useState<number[]>([]);
-    const [api, setApi] = useState<CarouselApi>(); // Состояние для API карусели
+    const [api, setApi] = useState<CarouselApi>();
+    const [students, setStudents] = useState<UserData[]>([])// Состояние для API карусели
 
-    // Обработчик для кнопки "лайк"
-    const handleLike = useCallback((id: number) => {
+    useEffect(() => {
+        const fetchAllUsers = async () => {
+            const response = await axiosWithAuth.get<UserData[]>("http://localhost:8000/api/v1/students/all")
+            setStudents(response.data)
+        }
+        fetchAllUsers()
+    }, []);
+
+    const handleLike = useCallback(async (id: number) => {
+        const response = await likeAction(id)
         setLikedProfiles((prev) => [...prev, id]); // Добавляем профиль в список лайкнутых
         if (api) {
             api.scrollNext(); // Переключаем на следующую карточку
@@ -68,19 +77,19 @@ export default function BrowsePage() {
                 <p className="text-gray-600 text-center mb-4">Выбери подходящего сокомандника по стэку технологий</p>
                 <Carousel className="rounded w-full" setApi={setApi}>
                     <CarouselContent>
-                        {developers.map((dev) => (
-                            <CarouselItem key={dev.id}>
+                        {students.map((dev) => (
+                            <CarouselItem key={dev.student_id}>
                                 <Card className="w-full border-0">
                                     <CardContent className="p-4 flex flex-col items-center text-center">
                                         <img
-                                            src={dev.image}
-                                            alt={dev.name}
+                                            src={dev.photo}
+                                            alt={dev.full_name}
                                             className="w-32 h-32 object-cover rounded-full mb-4"
                                         />
-                                        <CardTitle className="text-lg">{dev.name}</CardTitle>
+                                        <CardTitle className="text-lg">{dev.full_name}</CardTitle>
                                         <CardDescription className="text-gray-600">{dev.position}</CardDescription>
                                         <div className="flex flex-wrap gap-2 mt-2 justify-center">
-                                            {dev.techStack.map((tech) => (
+                                            {dev.technologies.map((tech) => (
                                                 <Badge key={tech} variant="secondary" className="bg-brand-lavender/10 text-brand-indigo">
                                                     {tech}
                                                 </Badge>
@@ -117,7 +126,7 @@ export default function BrowsePage() {
                                             <Button
                                                 size="lg"
                                                 className="rounded-full w-20 h-20 p-0 bg-gradient-to-r from-brand-blue to-brand-purple hover:opacity-90"
-                                                onClick={() => handleLike(dev.id)} // Обновляем обработчик
+                                                onClick={() => handleLike(dev.student_id)} // Обновляем обработчик
                                             >
                                                 <Heart className="h-6 w-6 text-white" />
                                             </Button>

@@ -23,11 +23,18 @@ export default function Home() {
                     идеи в реальность!
                     Находи, общайся и разрабатывайте лучшие проекты вместе!
                 </p>
-                <Link href="https://capypara.kai.ru">
-                    <Button className="rounded-full btn-gradient text-lg px-8 py-6 ">
-                        Скачать КапиПара
-                    </Button>
-                </Link>
+                <div className="flex flex-col items-center space-y-4 mx-auto">
+                    <Link href="https://capypara.kai.ru">
+                        <Button className="rounded-full btn-gradient text-lg px-8 py-6">
+                            Скачать КапиПара
+                        </Button>
+                    </Link>
+                    <Link href="/login">
+                        <Button className="rounded-full btn-gradient text-lg px-8 py-6">
+                            Авторизоваться
+                        </Button>
+                    </Link>
+                </div>
             </section>
 
             <section className="py-20 bg-white">
@@ -36,7 +43,7 @@ export default function Home() {
                         Почему Cognit.io?
                     </h2>
                     <div className="grid md:grid-cols-3 gap-12">
-                        <FeatureCard
+                    <FeatureCard
                             icon={<Users className="h-12 w-12 text-[#6A4DFF]"/>}
                             title="Совпадения по стеку"
                             description="Найди разработчиков, которые работают с тем же стеком, что и вы.

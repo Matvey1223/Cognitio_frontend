@@ -9,11 +9,13 @@ import { Card } from '@/components/ui/card';
 import { Code2 } from 'lucide-react';
 import { auth } from '@/services/auth.service'
 import { createAccessToken, getAccessToken } from "@/services/cookies.service";
+import {useRouter} from "next/navigation";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
     email: '',
   });
+  const router = useRouter(); // Инициализируем router
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,6 +23,12 @@ export default function LoginPage() {
       try {
           const response = await auth(formData.email);
           await createAccessToken(response.access_token)
+          if (response.is_first_time) {
+              router.push('/signup');
+          }
+          else{
+              router.push('/profile')
+          }
       } catch (error) {
           console.error(error);
       }
@@ -44,6 +52,7 @@ export default function LoginPage() {
             <Input
               id="email"
               type="email"
+              className="text-black"
               placeholder="you@example.com"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
